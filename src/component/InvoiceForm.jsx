@@ -3,8 +3,9 @@ import { IoClose } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { toggleForm } from "../Store/InvoiceSlice";
+import { addInvoice, toggleForm } from "../Store/InvoiceSlice";
 import { addDays, format } from "date-fns";
+import { Fieldset } from "@headlessui/react";
 
 function InvoiceForm() {
 
@@ -35,7 +36,36 @@ function InvoiceForm() {
             dueDate: format(addDays(new Date(), 30), "yyy-mm-dd"),
         };
     });
-    console.log(formData);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(addInvoice(formData));
+        console.log(formData);
+
+    }
+
+    const addItem = () => {
+        setFormData({ ...formData, items: [...formData.items, { name: "", quantity: 0, price: 0, total: 0 }] })
+    }
+
+    const updateItem = (index, field, value) => {
+        const newItems = [...formData.items];
+        newItems[index][field] = value;
+
+        if (field === 'quantity' || field === 'price') {
+            const qyt = field === 'quantity' ? value : newItems[index].quantity;
+            const price = field === 'price' ? value : newItems[index].price;
+            newItems[index].total = qyt * price;
+        }
+        setFormData({ ...formData, items: newItems });
+    }
+
+    const removeItem = (index) => {
+        setFormData({
+            ...formData,
+            items: formData.items.filter((_, i) => i !== index),
+        });
+    }
 
     return (
         <div className="flexd insert-0 flex items-start justify-center overflow-y-auto absolute top-0 left-[30%]">
@@ -48,7 +78,7 @@ function InvoiceForm() {
                     </button>
 
                 </div>
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-2">
                         <h3 className="text-violet-500 font-bold">Bill From</h3>
                         <input
@@ -189,7 +219,7 @@ function InvoiceForm() {
                                     const newDate = e.target.value;
                                     setFormData({
                                         ...formData, invoiceDate: newDate,
-                                        dueDate: format(assDays(new Date(newDate), 30), 'yyy-mm-dd')
+                                        dueDate: format(addDays(new Date(new Date), 30), 'yyyy-mm-dd')
                                     })
                                 }}
                             />
@@ -210,34 +240,58 @@ function InvoiceForm() {
                             type="text"
                             placeholder="Project Description"
                             required
+                            value={formData.projectDescription}
+                            onChange={
+                                (e) => setFormData({ ...formData, projectDescription: e.target.value })
+                            }
                             className="w-full bg-slate-900 rounded-lg p-3"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <h3 className="text-violet-500 font-bold">Item List</h3>
-                        <div className="grid grid-cols-12 gap-4 items-center">
-                            <input
-                                type="text"
-                                placeholder="Item Name"
-                                className="bg-slate-900 rounded-lg p-3 col-span-5"
-                            />
-                            <input
-                                type="number"
-                                placeholder="Quality"
-                                className="bg-slate-900 rounded-lg p-3 col-span-2"
-                                min="0"
-                                step="0.01"
-                                required
-                            />
-                            <div className=" col-span-3 text-right text-[18px]">
-                                Total Ammount
+                        {formData.items.map((item, index) => (
+                            <div className="grid grid-cols-12 gap-3 items-center" key={index}>
+                                <input
+                                    type="text"
+                                    placeholder="Item Name"
+                                    value={item.name}
+                                    onChange={(e) => updateItem(index, "name", e.target.value)}
+                                    className="bg-slate-900 rounded-lg p-3 col-span-5"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Quantity"
+                                    className="bg-slate-900 rounded-lg p-3 col-span-2"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                    value={item.quantity}
+                                    onChange={(e) => updateItem(index, "quantity", parseInt(e.target.value) || 0)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="price"
+                                    className="bg-slate-900 rounded-lg p-3 col-span-2"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                    value={item.price}
+                                    onChange={(e) => updateItem(index, "price", parseFloat(e.target.value) || 0)}
+                                />
+                                <div className=" col-span-2 text-right text-[18px]">
+                                    ${item.total.toFixed(2)}
+                                </div>
+                                <button type="button" onClick={(e) => removeItem(index)}>
+                                    <IoClose className="text-slate-400 hover:text-red-500 text-[20px] font-bold" />
+                                </button>
                             </div>
-                            <button type="button">
-                                <RiDeleteBin6Line className="text-slate-400 hover:text-red-500" />
-                            </button>
-                        </div>
-                        <button type="button" className="w-full bg-slate-700 hover:bg-slate-600 rounded-lg p-2 flex items-center justify-center space-x-2">
+                        ))}
+                        <button
+                            type="button"
+                            className="w-full bg-slate-700 hover:bg-slate-600 rounded-lg p-2 flex items-center justify-center space-x-2"
+                            onClick={addItem}
+                        >
                             <FaPlus className="m-2" />
                             Add New Item
                         </button>
@@ -247,7 +301,7 @@ function InvoiceForm() {
                         <button type="button" className="bg-orange-700 hover:bg-orange-600 text-white py-2 px-6 rounded-full">
                             Cancle
                         </button>
-                        <button type="button" className="bg-violet-500 hover:bg-violet-600 text-white py-2 px-6 rounded-full">
+                        <button type="submit" className="bg-violet-500 hover:bg-violet-600 text-white py-2 px-6 rounded-full">
                             Create Invoice
                         </button>
                     </div>
