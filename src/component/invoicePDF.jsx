@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         color: "#1e1e1e"
     },
     col1: { width: "40%" },
-    col1: { width: "20%", textAlign: "center" },
+    col2: { width: "20%", textAlign: "center" },
     col3: { width: "20%", textAlign: "right" },
     col4: { width: "20%", textAlign: "right" },
     totalSection: {

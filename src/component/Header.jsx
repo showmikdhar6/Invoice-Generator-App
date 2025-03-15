@@ -10,16 +10,19 @@ function Header({ onNewInvoice }) {
 
     const dispatch = useDispatch();
 
-    const { invoice, filter } = useSelector((state) => state.invoices) || [];
+
+    const { invoices, filter } = useSelector((state) => state.invoices);
     // console.log(invoice);
     return (
         <header className="flex items-center justify-between mb-8">
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Invoice</h1>
                 <p className="text-slate-400">
-                    {Array.isArray(invoice) && invoice.length === 0
+                    {console.log("Type of Invoice:", typeof invoice)}
+                    {console.log("Type of invoices:", typeof invoices)}
+                    {Array.isArray(invoices) && invoices.length === 0
                         ? "No Invoices"
-                        : `There are ${Array.isArray(invoice) ? invoice.length : 0} Total Invoices`}
+                        : `There are ${Array.isArray(invoices) ? invoices.length : 0} Total Invoices`}
                 </p>
             </div>
             <div className="flex items-center space-x-4">

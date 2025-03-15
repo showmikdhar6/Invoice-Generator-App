@@ -110,11 +110,16 @@ const invoiceSlice = createSlice({
             state.selectedInvoice = null;
             state.isFormOpen = false;
             saveState(state);
+        },
+
+        backInvoiceList: (state) => {
+            state.selectedInvoice = null;
+            state.isFormOpen = false;
         }
 
     },
 });
 
-export const { toggleForm, addInvoice, setFilter, setSelectedInvoice, markAsPaid, deleteInvoice, updateInvoice } = invoiceSlice.actions;  // Use correct case
+export const { toggleForm, addInvoice, setFilter, setSelectedInvoice, markAsPaid, deleteInvoice, updateInvoice, backInvoiceList } = invoiceSlice.actions;  // Use correct case
 
 export default invoiceSlice.reducer;

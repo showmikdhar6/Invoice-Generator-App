@@ -61,7 +61,7 @@ function InvoiceList() {
                                             : "bg-slate-700/50 text-slate-400"
                                     }`}
                             >
-                                <div className={` mt-2 w-2 h-2 rounded-full ${invoice.status === "paid" ? "bg-green-500" : invoice.status === "pending" ? "bg-orange-500" : "bg-slate-400"}`}></div>
+                                <div className={`mt-2 w-2 h-2 rounded-full ${invoice.status === "paid" ? "bg-green-500" : invoice.status === "pending" ? "bg-orange-500" : "bg-slate-400"}`}></div>
                                 <span className="capitalize">{invoice.status}</span>
                             </div>
                             <FaChevronRight className="text-violet-500" />

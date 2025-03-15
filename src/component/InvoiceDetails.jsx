@@ -5,24 +5,20 @@ import { deleteInvoice, markAsPaid, setSelectedInvoice, toggleForm } from "../St
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { InvoicePDF } from "./invoicePDF";
 import { FaDownload } from "react-icons/fa";
+import { AiOutlineOrderedList } from "react-icons/ai";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { MdPaid } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 import { pdf } from "@react-pdf/renderer";
+import { useNavigate } from 'react-router-dom';
 import { saveAs } from "file-saver";
+import App from "../App";
 
 function InvoiceDetails({ invoice }) {
     console.log(invoice);
 
     const dispatch = useDispatch();
 
-    const handleDownload = async (invoice) => {
-        if (!invoice) return;
-
-        try {
-            const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
-            saveAs(blob, `invoice-${invoice.id}.pdf`);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-        }
-    };
 
     const hanldeMarkAsPaid = () => {
         dispatch(markAsPaid(invoice.id));
@@ -36,6 +32,11 @@ function InvoiceDetails({ invoice }) {
         dispatch(deleteInvoice(invoice.id));
         dispatch(setSelectedInvoice(null));
     }
+
+    const handleBackToInvoiceList = () => {
+        dispatch(setSelectedInvoice(null));
+    }
+
 
     const formatDate = (dateString) => {
         try {
@@ -68,23 +69,30 @@ function InvoiceDetails({ invoice }) {
                     <PDFDownloadLink
                         document={<InvoicePDF invoice={invoice} />}
                         fileName={`invoice-${invoice.id}.pdf`}
-                        className="flex px-6 py-2 rounded-full bg-violet-500 hover:bg-violet-600 cursor-pointer"
+                        className="flex px-3 py-2 rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer"
                     >
                         {({ loading }) => (
                             <>
-                                <FaDownload />
-                                <span className="px-2">{loading ? "Loading..." : "Download PDF"}</span>
+                                <FaDownload className="mt-2" />
+                                <span className="px-2 mt-[5px]">{loading ? "Loading..." : "Download PDF"}</span>
                             </>
                         )}
                     </PDFDownloadLink>
-                    <button onClick={handleEdit} className="px-6 py-2 rounded-full bg-slate-700 hover:bg-slate-600">
-                        Edit
+                    <button onClick={handleEdit} className="flex px-3 py-2 rounded-full bg-slate-700 hover:bg-slate-600">
+                        <FiEdit className="mt-2" />
+                        <span className="px-1 mt-[5px]">Edit</span>
                     </button>
-                    <button onClick={handleDeleteInvoice} className="px-6 py-2 rounded-full bg-red-500 hover:bg-red-600">
-                        Delete
+                    <button onClick={handleDeleteInvoice} className="flex px-3 py-2 rounded-full bg-red-500 hover:bg-red-600">
+                        <RiDeleteBin6Line className="mt-2" />
+                        <span className="px-1 mt-[5px]">Delete</span>
                     </button>
-                    <button onClick={hanldeMarkAsPaid} className="px-6 py-2 rounded-full bg-violet-500 hover:bg-violet-600">
-                        Mark as Paid
+                    <button onClick={hanldeMarkAsPaid} className="flex px-3 py-2 rounded-full bg-green-500 hover:bg-green-600">
+                        <MdPaid className="mt-2 bg-green" />
+                        <span className="px-1 mt-[5px]">Mark as Paid</span>
+                    </button>
+                    <button onClick={handleBackToInvoiceList} className="flex px-3 py-2 rounded-full bg-gray-600 hover:bg-gray-500">
+                        <AiOutlineOrderedList className="mt-2" />
+                        <span className="px-1 mt-[5px]">Invoice List</span>
                     </button>
                 </div>
             </div>
