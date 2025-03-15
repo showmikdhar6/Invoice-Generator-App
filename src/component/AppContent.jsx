@@ -22,7 +22,7 @@ function AppContent() {
                 <Header onNewInvoice={handleNewInvoice} />
                 {selectedInvoice ? <InvoiceDetails invoice={selectedInvoice} /> : <InvoiceList />}
                 {/* <InvoiceDetails /> */}
-                {isFormOpen && <InvoiceForm />}
+                {isFormOpen && <InvoiceForm invoice={selectedInvoice} />}
                 {/* <InvoiceList /> */}
 
             </div>

@@ -1,16 +1,21 @@
-import React, { useDebugValue, useState } from "react";
+import React, { useDebugValue, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { addInvoice, toggleForm } from "../Store/InvoiceSlice";
+import { addInvoice, toggleForm, updateInvoice } from "../Store/InvoiceSlice";
 import { addDays, format } from "date-fns";
 import { Fieldset } from "@headlessui/react";
 
-function InvoiceForm() {
+function InvoiceForm({ invoice }) {
 
     const dispatch = useDispatch();
     const [formData, setFormData] = useState(() => {
+
+        if (invoice) {
+            return { ...invoice };
+        }
+
         return {
             id: `INV${Math.floor(Math.random() * 10000)}`,
             status: "pending",
@@ -39,10 +44,19 @@ function InvoiceForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(addInvoice(formData));
+        if (invoice) {
+            dispatch(updateInvoice(formData))
+        } else {
+            dispatch(addInvoice(formData));
+        }
         console.log(formData);
-
     }
+
+    useEffect(() => {
+        if (invoice) {
+            setFormData(invoice);
+        }
+    }, [invoice]);
 
     const addItem = () => {
         setFormData({ ...formData, items: [...formData.items, { name: "", quantity: 0, price: 0, total: 0 }] })
@@ -302,7 +316,7 @@ function InvoiceForm() {
                             Cancle
                         </button>
                         <button type="submit" className="bg-violet-500 hover:bg-violet-600 text-white py-2 px-6 rounded-full">
-                            Create Invoice
+                            {invoice ? "Save Changes" : "Create Invoice"}
                         </button>
                     </div>
 

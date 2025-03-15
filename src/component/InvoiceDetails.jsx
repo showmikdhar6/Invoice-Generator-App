@@ -1,9 +1,41 @@
 import { format, parseISO } from "date-fns";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { deleteInvoice, markAsPaid, setSelectedInvoice, toggleForm } from "../Store/InvoiceSlice";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { InvoicePDF } from "./invoicePDF";
+import { FaDownload } from "react-icons/fa";
+import { pdf } from "@react-pdf/renderer";
+import { saveAs } from "file-saver";
 
 function InvoiceDetails({ invoice }) {
     console.log(invoice);
 
+    const dispatch = useDispatch();
+
+    const handleDownload = async (invoice) => {
+        if (!invoice) return;
+
+        try {
+            const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
+            saveAs(blob, `invoice-${invoice.id}.pdf`);
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        }
+    };
+
+    const hanldeMarkAsPaid = () => {
+        dispatch(markAsPaid(invoice.id));
+    }
+
+    const handleEdit = () => {
+        dispatch(toggleForm());
+    }
+
+    const handleDeleteInvoice = () => {
+        dispatch(deleteInvoice(invoice.id));
+        dispatch(setSelectedInvoice(null));
+    }
 
     const formatDate = (dateString) => {
         try {
@@ -33,13 +65,25 @@ function InvoiceDetails({ invoice }) {
                     </div>
                 </div>
                 <div className="flex space-x-4">
-                    <button className="px-6 py-2 rounded-full bg-slate-700 hover:bg-slate-600">
+                    <PDFDownloadLink
+                        document={<InvoicePDF invoice={invoice} />}
+                        fileName={`invoice-${invoice.id}.pdf`}
+                        className="flex px-6 py-2 rounded-full bg-violet-500 hover:bg-violet-600 cursor-pointer"
+                    >
+                        {({ loading }) => (
+                            <>
+                                <FaDownload />
+                                <span className="px-2">{loading ? "Loading..." : "Download PDF"}</span>
+                            </>
+                        )}
+                    </PDFDownloadLink>
+                    <button onClick={handleEdit} className="px-6 py-2 rounded-full bg-slate-700 hover:bg-slate-600">
                         Edit
                     </button>
-                    <button className="px-6 py-2 rounded-full bg-red-500 hover:bg-red-600">
+                    <button onClick={handleDeleteInvoice} className="px-6 py-2 rounded-full bg-red-500 hover:bg-red-600">
                         Delete
                     </button>
-                    <button className="px-6 py-2 rounded-full bg-violet-500 hover:bg-violet-600">
+                    <button onClick={hanldeMarkAsPaid} className="px-6 py-2 rounded-full bg-violet-500 hover:bg-violet-600">
                         Mark as Paid
                     </button>
                 </div>
