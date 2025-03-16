@@ -312,7 +312,7 @@ function InvoiceForm({ invoice }) {
                     </div>
 
                     <div className="flex justify-end space-x-4">
-                        <button type="button" className="bg-orange-700 hover:bg-orange-600 text-white py-2 px-6 rounded-full">
+                        <button type="button" onClick={() => dispatch(toggleForm())} className="bg-orange-700 hover:bg-orange-600 text-white py-2 px-6 rounded-full">
                             Cancle
                         </button>
                         <button type="submit" className="bg-violet-500 hover:bg-violet-600 text-white py-2 px-6 rounded-full">

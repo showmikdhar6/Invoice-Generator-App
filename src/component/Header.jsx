@@ -45,11 +45,11 @@ function Header({ onNewInvoice }) {
                     </Menu.Items>
                 </Menu>
 
-                <button type="button" onClick={onNewInvoice} className="bg-violet-500 hover:bg-violet-600 text-white py-2 px-5 rounded-full flex items-center space-x-2">
-                    <div className="bg-white rounded-full p-2">
+                <button type="button" onClick={onNewInvoice} className="bg-violet-500 hover:bg-violet-600 text-white py-1 px-3 rounded-full flex items-center space-x-2">
+                    <div className="bg-white rounded-full p-1">
                         <FaPlus className="text-slate-500" />
                     </div>
-                    <span> New Invoice </span>
+                    <span className="mt-1"> New Invoice </span>
                 </button>
             </div>
         </header>

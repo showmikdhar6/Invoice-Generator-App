@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
         borderBottomColor: "#f3f4f6",
     },
     tableCell: {
-        fontSize: 14,
+        fontSize: 12,
+        marginBottom: 2,
         color: "#1e1e1e"
     },
     col1: { width: "40%" },
@@ -230,7 +231,7 @@ export const InvoicePDF = ({ invoice }) => {
                                 <Text style={[styles.tableCell, styles.col1]}>{item.name}</Text>
                                 <Text style={[styles.tableCell, styles.col2]}>{item.quantity}</Text>
                                 <Text style={[styles.tableCell, styles.col3]}>${item.price.toFixed(2)}</Text>
-                                <Text style={[styles.tableCell, styles.col3]}>${item.total.toFixed(2)}</Text>
+                                <Text style={[styles.tableCell, styles.col4]}>${item.total.toFixed(2)}</Text>
                             </View>
                         ))}
                     </View>
